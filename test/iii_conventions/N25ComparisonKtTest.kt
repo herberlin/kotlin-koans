@@ -1,6 +1,7 @@
 package iii_conventions
 
 import iii_conventions.test.s
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -21,7 +22,4 @@ class N25ComparisonKtTest {
         val second = MyDate(2014, 7, 11)
         assertTrue("The date ${first.s} should be after ${second.s}", first > second)
     }
-
-    /* If you declare 'compareTo' as an extension function, remove this one to make the code compile */
-    operator fun MyDate.compareTo(other: MyDate): Int = todoTask25()
 }
