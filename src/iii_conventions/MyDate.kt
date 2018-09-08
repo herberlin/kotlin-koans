@@ -15,7 +15,22 @@ data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int) : Comparab
 //}
 
 
-operator fun MyDate.rangeTo(other: MyDate): DateRange = todoTask27()
+operator fun MyDate.rangeTo(other: MyDate): DateRange {
+    return DateRange(this, other);
+}
+
+operator fun MyDate.plus(ti: TimeInterval): MyDate = addTimeIntervals(ti, 1)
+
+operator fun MyDate.plus(rti: RepeatedTimeInterval) : MyDate
+        = addTimeIntervals(rti.ti, rti.times)
+
+
+operator fun TimeInterval.times(times : Int) : RepeatedTimeInterval {
+    return RepeatedTimeInterval(this,times)
+}
+
+class RepeatedTimeInterval(val ti: TimeInterval, val times : Int)
+
 
 enum class TimeInterval {
     DAY,
@@ -23,4 +38,28 @@ enum class TimeInterval {
     YEAR
 }
 
-class DateRange(val start: MyDate, val endInclusive: MyDate)
+class MyDateIterator(startDate: MyDate, endDate: MyDate) : Iterator<MyDate> {
+
+    private var current: MyDate = startDate;
+    private var endDate: MyDate = endDate
+
+    override fun next(): MyDate {
+        val result = current;
+        if (hasNext()) {
+            current = current.nextDay();
+        }
+        return result;
+    }
+
+    override fun hasNext(): Boolean {
+        return current <= endDate;
+    }
+
+}
+
+class DateRange(override val start: MyDate, override val endInclusive: MyDate)
+    : ClosedRange<MyDate>, Iterable<MyDate> {
+    override fun iterator(): Iterator<MyDate> {
+        return MyDateIterator(start, endInclusive)
+    }
+}
